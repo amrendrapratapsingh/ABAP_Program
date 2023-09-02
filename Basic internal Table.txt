@@ -1,0 +1,65 @@
+*&---------------------------------------------------------------------*
+*& Report  ZPRATAP_INTERNAL_TABLE_01
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+REPORT  ZPRATAP_INTERNAL_TABLE_01.
+
+* ways to declare the internal table.
+
+* option- 1 specifice field and independent work area and Body.
+
+TYPES: BEGIN OF STU_ORDERS,
+       AUFNR TYPE AUFNR,
+       AUART TYPE AUFART,
+       AUTYP TYPE AUFTYP,
+       CAL_FIELD TYPE CHAR20,
+     END OF STU_ORDERS.
+
+
+DATA: WA_ORDERS TYPE STU_ORDERS,
+      IT_ORDERS TYPE TABLE OF STU_ORDERS.
+
+
+* option - 2 All field and independent work area and body.
+
+DATA: WA_MARA TYPE MARA,
+      IT_MARA TYPE TABLE OF MARA.
+
+
+* option - 3 specifice field and in-built header line with body
+
+DATA: IT_ORDERS_HL TYPE TABLE OF STU_ORDERS WITH HEADER LINE.
+
+* option - 4 All field and in-built header line with body.
+
+DATA: IT_MATERIALS_HL TYPE TABLE OF MARA WITH HEADER LINE.
+
+
+SELECT AUFNR AUART AUTYP FROM AUFK INTO WA_ORDERS.
+  APPEND WA_ORDERS TO IT_ORDERS.
+ENDSELECT.
+
+CLEAR IT_ORDERS.
+SELECT AUFNR AUART AUTYP FROM AUFK INTO TABLE IT_ORDERS.
+
+SELECT * FROM MARA INTO WA_MARA.
+  APPEND WA_MARA TO IT_MARA.
+ENDSELECT.
+
+CLEAR IT_MARA.
+SELECT * FROM MARA INTO TABLE IT_MARA.
+
+
+SELECT AUFNR AUART AUTYP FROM AUFK INTO IT_ORDERS_HL.
+  APPEND IT_ORDERS_HL. " to it_orders_h1.
+ENDSELECT.
+
+CLEAR IT_ORDERS_HL.
+SELECT AUFNR AUART AUTYP FROM AUFK INTO TABLE IT_ORDERS_HL.
+
+
+BREAK-POINT.
